@@ -8,6 +8,7 @@
 
 name: Build OpenWrt
 
+
 on: 
   # repository_dispatch:
   workflow_dispatch:
@@ -52,6 +53,7 @@ jobs:
 
     - name: Load Settings.ini
       run: |
+        echo ${{github.event}}
         echo ${{matrix.target}}
         source "${GITHUB_WORKSPACE}/devices/common/settings.ini"
         if [ -f "devices/${{matrix.target}}/settings.ini" ]; then
