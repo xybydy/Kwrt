@@ -15,7 +15,7 @@ on:
     inputs:
       param:
         description: 'parameter'
-        required: false
+        required: true
         default: 'rockchip_armv8'
 
 env:
@@ -53,7 +53,7 @@ jobs:
 
     - name: Load Settings.ini
       run: |
-        echo ${{github.event}}
+        echo ${{github.event.inputs}}
         echo ${{matrix.target}}
         source "${GITHUB_WORKSPACE}/devices/common/settings.ini"
         if [ -f "devices/${{matrix.target}}/settings.ini" ]; then
