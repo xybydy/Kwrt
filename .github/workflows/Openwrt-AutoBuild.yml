@@ -37,8 +37,8 @@ jobs:
     name: Build ${{github.event.inputs.param}}
     strategy:
       fail-fast: false
-      matrix:
-        target: ["${{ github.event.client_payload.target }}"]
+      # matrix:
+        # target: ["${{ github.event.client_payload.target }}"]
         
     steps:
     - name: Checkout
