@@ -183,10 +183,6 @@ jobs:
             fi
         fi
 
-    - name: SSH connection to Actions
-      uses: kiddin9/debugger-action@master
-      if: ${{github.event.inputs.ssh}}
-
     - name: Free up disk space
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -239,6 +235,10 @@ jobs:
           /bin/bash "devices/${{github.event.inputs.param}}/$DIY_SH"
         fi
         cp -Rf ./diy/* ./ || true
+
+    - name: SSH connection to Actions
+      uses: kiddin9/debugger-action@master
+      if: ${{github.event.inputs.ssh}}
 
     - name: Apply patches
       run: |
