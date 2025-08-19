@@ -17,6 +17,9 @@ on:
         description: 'parameter'
         required: true
         default: 'rockchip_armv8'
+      ssh:
+        type: boolean
+        default: false
 
 env:
   # REPO_TOKEN: ${{ secrets.TOKEN_KIDDIN9 }}
@@ -285,7 +288,7 @@ jobs:
 
     - name: SSH connection to Actions
       uses: kiddin9/debugger-action@master
-      if: contains(github.event.action, 'ssh')
+      if: ${{github.event.inputs.ssh}}
 
     - name: Compile the firmware
       id: compile
