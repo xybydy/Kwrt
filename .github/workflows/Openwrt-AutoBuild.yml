@@ -183,6 +183,10 @@ jobs:
             fi
         fi
 
+    - name: SSH connection to Actions
+      uses: kiddin9/debugger-action@master
+      if: ${{github.event.inputs.ssh}}
+
     - name: Free up disk space
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -286,9 +290,9 @@ jobs:
         fi
         df -hT
 
-    - name: SSH connection to Actions
-      uses: kiddin9/debugger-action@master
-      if: ${{github.event.inputs.ssh}}
+    # - name: SSH connection to Actions
+    #   uses: kiddin9/debugger-action@master
+    #   if: ${{github.event.inputs.ssh}}
 
     - name: Compile the firmware
       id: compile
