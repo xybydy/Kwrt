@@ -31,7 +31,7 @@ env:
   # SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   # DOCKER_ID: ${{ secrets.DOCKER_ID }}
   # DOCKER_PASSWD: ${{ secrets.DOCKER_PASSWD }}
-  TZ: Asia/Shanghai
+  TZ: Europe/Istanbul
 
 jobs:
   build:
@@ -40,8 +40,6 @@ jobs:
     name: Build ${{github.event.inputs.param}}
     strategy:
       fail-fast: false
-      # matrix:
-        # target: ["${{ github.event.client_payload.target }}"]
         
     steps:
     - name: Checkout
@@ -71,7 +69,7 @@ jobs:
         echo "UPLOAD_FIRMWARE_FOR_RELEASE=${UPLOAD_FIRMWARE_FOR_RELEASE}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_COWTRANSFER=${UPLOAD_FIRMWARE_TO_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
-        sed -i "1a REPO_TOKEN=${{ secrets.TOKEN_KIDDIN9 }}" ${GITHUB_WORKSPACE}/devices/common/diy.sh
+        # sed -i "1a REPO_TOKEN=${{ secrets.TOKEN_KIDDIN9 }}" ${GITHUB_WORKSPACE}/devices/common/diy.sh
         sed -i "1a TARGET=${{github.event.inputs.param}}" ${GITHUB_WORKSPACE}/devices/common/diy.sh
         if [ ${{github.event.inputs.param}} == "x86_64" ]; then
             echo "ARCH=linux/amd64" >> $GITHUB_ENV
@@ -141,7 +139,7 @@ jobs:
         libelf-dev device-tree-compiler libgmp3-dev libmpc-dev libfuse-dev
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
-        sudo timedatectl set-timezone "Asia/Shanghai"
+        sudo timedatectl set-timezone "$TZ"
         # git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         # git config --global user.name "github-actions[bot]"
 
@@ -243,8 +241,8 @@ jobs:
           if [ -n "$(ls -A devices/${{github.event.inputs.param}}/*.bin.patch 2>/dev/null)" ]; then
             git apply devices/${{github.event.inputs.param}}/patches/*.bin.patch
           fi
-          find "devices/${{github.event.inputs.param}}/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -R -B --merge -p1 --forward"
-          find "devices/${{github.event.inputs.param}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -B --merge -p1 --forward"
+          # find "devices/${{github.event.inputs.param}}/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -R -B --merge -p1 --forward"
+          # find "devices/${{github.event.inputs.param}}/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -B --merge -p1 --forward"
         sed -i '$a  \
         CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
         CONFIG_CPU_FREQ_GOV_USERSPACE=y \
