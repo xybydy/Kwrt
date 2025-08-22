@@ -313,6 +313,11 @@ jobs:
         rm -rf staging_dir/toolchain-*/initial
         df -hT
 
+    - name: All List
+      id: alllist
+      run: |
+        ls -lhR .
+
     - name: Package Firmware
       run: |
           cd openwrt && mkdir ./upload/
@@ -348,11 +353,6 @@ jobs:
         rm -rf kwrt-!(*imagebuilder *)
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
-
-    - name: All List
-      id: alllist
-      run: |
-        ls -lhR .
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
