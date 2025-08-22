@@ -346,7 +346,6 @@ jobs:
       continue-on-error: true
       run: |
         shopt -s extglob
-        ls -lh openwrt/bin/targets/
         cd openwrt/bin/targets/*/*/
         cp $GITHUB_WORKSPACE/openwrt/.config ${{github.event.inputs.param}}.config || true
         cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config ${{github.event.inputs.param}}_kernel.config || true
@@ -360,8 +359,7 @@ jobs:
       with:
         name: ${{ env.VERSION }}_${{github.event.inputs.param}}
         path: |
-          openwrt/bin/targets/
-          openwrt/upload/
+          openwrt
 
     # - name: Deploy imagebuilder to server
     #   uses: easingthemes/ssh-deploy@main
