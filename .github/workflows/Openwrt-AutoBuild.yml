@@ -294,6 +294,13 @@ jobs:
     #   uses: kiddin9/debugger-action@master
     #   if: ${{github.event.inputs.ssh}}
 
+    - name: Download Packages
+      id: package_download
+      run: |
+        shopt -s extglob
+        cd openwrt
+        make download -j$(nproc)
+        
     - name: Compile the firmware
       id: compile
       run: |
@@ -306,6 +313,29 @@ jobs:
         rm -rf staging_dir/toolchain-*/initial
         df -hT
 
+    - name: Package Firmware
+      run: |
+          cd openwrt && mkdir ./upload/
+
+          cp -f ./.config ./upload/config.txt
+
+          
+          echo "WRT_KVER=$(find ./bin/targets/ -type f -name "*.manifest" -exec grep -oP '^kernel - \K[\d\.]+' {} \;)" >> $GITHUB_ENV
+          echo "WRT_LIST=$(find ./bin/targets/ -type f -name "*.manifest" -exec grep -oP '^luci-(app|theme)[^ ]*' {} \; | tr '\n' ' ')" >> $GITHUB_ENV
+
+          find ./bin/targets/ -iregex ".*\(buildinfo\|json\|sha256sums\|packages\)$" -exec rm -rf {} +
+
+          for FILE in $(find ./bin/targets/ -type f -iname "*${{github.event.inputs.param}}*") ; do
+            EXT=$(basename $FILE | cut -d '.' -f 2-)
+            NAME=$(basename $FILE | cut -d '.' -f 1 | grep -io "\(${{github.event.inputs.param}}\).*")
+            NEW_FILE="${{github.event.inputs.param}}"."$EXT"
+            mv -f $FILE ./upload/$NEW_FILE
+          done
+
+          find ./bin/targets/ -type f -exec mv -f {} ./upload/ \;
+
+          make clean -j$(nproc)
+
     - name: Organize files
       id: organize
       continue-on-error: true
@@ -315,10 +345,14 @@ jobs:
         cd openwrt/bin/targets/*/*/
         cp $GITHUB_WORKSPACE/openwrt/.config ${{github.event.inputs.param}}.config || true
         cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config ${{github.event.inputs.param}}_kernel.config || true
-        rm -rf kwrt-!(*imagebuilder*)
+        rm -rf kwrt-!(*imagebuilder *)
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
-        ls -lh openwrt/bin/targets/
+
+    - name: All List
+      id: alllist
+      run: |
+        ls -lhR .
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
@@ -327,6 +361,7 @@ jobs:
         name: ${{ env.VERSION }}_${{github.event.inputs.param}}
         path: |
           openwrt/bin/targets/
+          openwrt/upload/
 
     # - name: Deploy imagebuilder to server
     #   uses: easingthemes/ssh-deploy@main
