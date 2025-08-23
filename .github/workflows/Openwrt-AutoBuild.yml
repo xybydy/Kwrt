@@ -349,7 +349,7 @@ jobs:
         cd openwrt/bin/targets/*/*/
         cp $GITHUB_WORKSPACE/openwrt/.config ${{github.event.inputs.param}}.config || true
         cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config ${{github.event.inputs.param}}_kernel.config || true
-        rm -rf kwrt-!(*imagebuilder *)
+        # rm -rf kwrt-!(*imagebuilder *)
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
 
@@ -359,7 +359,7 @@ jobs:
       with:
         name: ${{ env.VERSION }}_${{github.event.inputs.param}}
         path: |
-          openwrt
+          openwrt/bin/targets/
 
     # - name: Deploy imagebuilder to server
     #   uses: easingthemes/ssh-deploy@main
