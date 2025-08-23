@@ -13,7 +13,7 @@ sed -i '/	refresh_config();/d' scripts/feeds
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
 
-sed --follow-symlinks -i "s#%C\"#%C by Kiddin'\"#" package/base-files/files/etc/os-release
+sed --follow-symlinks -i "s#%C\"#%C by xybydy'\"#" package/base-files/files/etc/os-release
 sed -i -e '$a /etc/bench.log' \
         -e '/\/etc\/profile/d' \
         -e '/\/etc\/shinit/d' \
@@ -31,11 +31,13 @@ wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/openwrt-24.10/
 wget -N https://github.com/immortalwrt/immortalwrt/raw/refs/heads/master/config/Config-kernel.in -P config/
 
 rm -rf package/libs/openssl package/network/services/ppp
-git_clone_path openwrt-24.10 https://github.com/immortalwrt/immortalwrt package/libs/openssl package/network/services/ppp
+# git_clone_path openwrt-24.10 https://github.com/immortalwrt/immortalwrt package/libs/openssl package/network/services/ppp
+git_clone_path master https://github.com/immortalwrt/immortalwrt package/libs/openssl package/network/services/ppp
 
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
-sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advancedplus luci-app-firewall luci-app-package-manager luci-app-upnp luci-app-syscontrol luci-proto-wireguard \
+# sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advancedplus luci-app-firewall luci-app-package-manager luci-app-upnp luci-app-syscontrol luci-proto-wireguard \
+sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advancedplus luci-app-firewall luci-app-package-manager luci-app-upnp luci-app-syscontrol \
 luci-app-wizard luci-base luci-compat luci-lib-ipkg luci-lib-fs luci-app-log-viewer \
 coremark wget-ssl curl autocore htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash openssh-sftp-server block-mount resolveip ds-lite swconfig luci-app-fan luci-app-filemanager /" include/target.mk
 
@@ -83,7 +85,7 @@ sed -i \
 	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
 	package/feeds/kiddin9/*/Makefile
 
-sed -i "s/OpenWrt/Kwrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in include/u-boot.mk include/version.mk || true
+sed -i "s/OpenWrt/XYWrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in include/u-boot.mk include/version.mk || true
 
 sed -i -e "s/set \${s}.country='\${country || ''}'/set \${s}.country='\${country || \"CN\"}'/g" -e "s/set \${s}.disabled=.*/set \${s}.disabled='0'/" package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc
 
