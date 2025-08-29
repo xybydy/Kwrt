@@ -13,7 +13,7 @@
 
 --- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
 +++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
-@@ -13,9 +13,15 @@ case "$FIRMWARE" in
+@@ -13,9 +13,16 @@ case "$FIRMWARE" in
  		ln -sf /tmp/tp_data/MT7981_EEPROM.bin \
  			/lib/firmware/$FIRMWARE
  		;;
