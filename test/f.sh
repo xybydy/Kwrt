@@ -28,7 +28,7 @@ function git_clone_path() {
 TARGET="armsr_armv8" # rockchip_armv8
 REPO_BRANCH="openwrt-24.10"
 
-sed -i "1a TARGET=${TARGET}" devices/common/diy.sh
+sed -i "1a TARGET=${TARGET}" diy.sh
 
 if [ "$TARGET" = "rockchip_armv8" ]; then
     export MTARGET=aarch64_generic
@@ -60,7 +60,7 @@ cp -Rf ./diy/* ./ || true
 
 ## apply patch
 
-cp -rn ../patches ../${TARGET}/
+cp -rn ../patches ../${TARGET}/w
 
 if [ -n "$(ls -A ../${TARGET}/*.bin.patch 2>/dev/null)" ]; then
   git apply ../${TARGET}/patches/*.bin.patch
