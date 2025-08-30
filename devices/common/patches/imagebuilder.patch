@@ -25,7 +25,6 @@
  Target-Profile-hasImageMetadata: $(if $(foreach image,$(IMAGES),$(findstring append-metadata,$(IMAGE/$(image)))),1,0)
  Target-Profile-SupportedDevices: $(SUPPORTED_DEVICES)
  $(if $(BROKEN),Target-Profile-Broken: $(BROKEN))
-
 --- a/scripts/json_add_image_info.py
 +++ b/scripts/json_add_image_info.py
 @@ -72,6 +72,7 @@ def get_titles():
@@ -36,7 +35,6 @@
          }
      },
  }
-
 --- a/scripts/target-metadata.pl
 +++ b/scripts/target-metadata.pl
 @@ -437,6 +437,7 @@ ()
@@ -47,7 +45,6 @@
  			print $profile->{id}.'_HAS_IMAGE_METADATA:='.$profile->{has_image_metadata}."\n";
  			if (defined($profile->{supported_devices}) and @{$profile->{supported_devices}} > 0) {
  				print $profile->{id}.'_SUPPORTED_DEVICES:='.join(' ', @{$profile->{supported_devices}})."\n";
-
 --- a/scripts/metadata.pm
 +++ b/scripts/metadata.pm
 @@ -150,6 +150,7 @@ sub parse_target_metadata($) {
@@ -58,7 +55,6 @@
  		/^Target-Profile-hasImageMetadata:\s*(\d+)\s*$/ and $profile->{has_image_metadata} = $1;
  		/^Target-Profile-SupportedDevices:\s*(.+)\s*$/ and $profile->{supported_devices} = [ split(/\s+/, $1) ];
  		/^Target-Profile-Priority:\s*(\d+)\s*$/ and do {
-
 --- a/target/imagebuilder/Makefile
 +++ b/target/imagebuilder/Makefile
 @@ -39,7 +39,8 @@ $(BIN_DIR)/$(IB_NAME).tar.zst: clean
@@ -87,10 +83,9 @@
  
  	# create an empty package index so `opkg` doesn't report an error
  	touch $(PKG_BUILD_DIR)/packages/Packages
-
 --- a/target/imagebuilder/files/Makefile
 +++ b/target/imagebuilder/files/Makefile
-@@ -148,6 +148,33 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
+@@ -148,6 +148,30 @@ BUILD_PACKAGES:=$(sort $(DEFAULT_PACKAGES) $($(USER_PROFILE)_PACKAGES) kernel)
  # "-pkgname" in the package list means remove "pkgname" from the package list
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  BUILD_PACKAGES:=$(USER_PACKAGES) $(BUILD_PACKAGES)
@@ -121,7 +116,7 @@
  BUILD_PACKAGES:=$(filter-out $(filter -%,$(BUILD_PACKAGES)) $(patsubst -%,%,$(filter -%,$(BUILD_PACKAGES))),$(BUILD_PACKAGES))
  PACKAGES:=
  
-@@ -155,14 +182,16 @@ _call_image: staging_dir/host/.prereq-build
+@@ -155,14 +179,16 @@ _call_image: staging_dir/host/.prereq-build
  	echo 'Building images for $(BOARD)$(if $($(USER_PROFILE)_NAME), - $($(USER_PROFILE)_NAME))'
  	echo 'Packages: $(BUILD_PACKAGES)'
  	echo
@@ -139,7 +134,7 @@
  
  _call_manifest: FORCE
  	rm -rf $(TARGET_DIR)
-@@ -230,9 +259,17 @@ package_install: FORCE
+@@ -230,9 +256,15 @@ package_install: FORCE
  	@echo
  	@echo Installing packages...
  ifeq ($(CONFIG_USE_APK),)
@@ -156,7 +151,7 @@
  else
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/libc-*.apk $(PACKAGE_DIR)/libc-*.apk))
  	$(APK) add --no-scripts $(firstword $(wildcard $(LINUX_DIR)/kernel-*.apk $(PACKAGE_DIR)/kernel-*.apk))
-@@ -260,16 +297,19 @@ else
+@@ -260,16 +292,19 @@ else
  	)
  endif
  	$(call prepare_rootfs,$(TARGET_DIR),$(USER_FILES),$(DISABLED_SERVICES))
