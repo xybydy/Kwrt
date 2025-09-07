@@ -17,6 +17,7 @@ on:
         required: true
         default: "armsr_armv8"
       ssh:
+        description: 'ssh'
         type: boolean
         default: false
 
@@ -105,13 +106,12 @@ jobs:
 
       # - name: Trigger Packages Update
       #   continue-on-error: true
-      #   if: contains(github.event.action, 'pkg')
       #   run: |
-      #     status=$(curl -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" -s "https://api.github.com/repos/kiddin9/kwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+      #     status=$(curl -H "Authorization: token ${{ secrets.TOKEN_WRT }}" -s "https://api.github.com/repos/xybydy/kwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
       #     if [[ "$status" == "completed" ]]; then
-      #       curl -X POST https://api.github.com/repos/kiddin9/kwrt-packages/dispatches \
+      #       curl -X POST https://api.github.com/repos/xybydy/kwrt-packages/dispatches \
       #         -H "Accept: application/vnd.github.everest-preview+json" \
-      #         -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
+      #         -H "Authorization: token ${{ secrets.TOKEN_WRT }}" \
       #       --data '{"event_type": "update"}'
       #     fi
 
@@ -154,12 +154,14 @@ jobs:
         run: |
           set -x
           REPO_BRANCH="openwrt-24.10"
+          echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/releases/24.10\"">>devices/common/.config
           if [[ ! "${{ env.REPO_BRANCH }}" && "$REPO_URL" == "https://github.com/openwrt/openwrt" ]]; then
               git clone $REPO_URL -b $REPO_BRANCH openwrt
           elif [[ ! "${{ env.REPO_BRANCH }}" ]]; then
               git clone $REPO_URL openwrt
           else
               REPO_BRANCH="${{env.REPO_BRANCH}}"
+              
               if [[ ${#REPO_BRANCH} -lt 10 ]]; then
                   git clone $REPO_URL -b ${REPO_BRANCH} openwrt
               else
@@ -222,9 +224,9 @@ jobs:
           fi
           cp -Rf ./diy/* ./ || true
 
-      # - name: SSH connection to Actions
-      #   uses: kiddin9/debugger-action@master
-      #   if: ${{github.event.inputs.ssh}} == 'true'
+      - name: SSH connection to Actions
+        uses: kiddin9/debugger-action@master
+        if: github.event.inputs.ssh == 'true'
 
       - name: Apply patches
         run: |
@@ -275,10 +277,6 @@ jobs:
               rm -rf staging_dir/!(*${{ env.MTARGET }}*|host|hostpkg) build_dir/!(*${{ env.MTARGET }}*|host|hostpkg)
           fi
           df -hT
-
-      # - name: SSH connection to Actions
-      #   uses: kiddin9/debugger-action@master
-      #   if: ${{github.event.inputs.ssh}}
 
       # - name: Download Packages
       #   id: package_download
