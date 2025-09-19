@@ -155,6 +155,7 @@ jobs:
           set -x
           REPO_BRANCH="openwrt-24.10"
           echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/releases/24.10\"">>devices/common/.config
+          cat devices/common/.config
           if [[ ! "${{ env.REPO_BRANCH }}" && "$REPO_URL" == "https://github.com/openwrt/openwrt" ]]; then
               git clone $REPO_URL -b $REPO_BRANCH openwrt
           elif [[ ! "${{ env.REPO_BRANCH }}" ]]; then
