@@ -90,7 +90,7 @@ sed -i \
 	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
 	package/feeds/kiddin9/*/Makefile
 
-sed -i "s/OpenWrt/xyWrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in || true
+sed -i "s/OpenWrt/xyWrt/g" package/base-files/files/bin/config_generate package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in || true
 sed -i "s/OpenWrt/Kwrt/g" package/base-files/image-config.in include/u-boot.mk include/version.mk || true
 # sed -i "s/OpenWrt/Kwrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in include/u-boot.mk include/version.mk || true
 
