@@ -2,31 +2,6 @@
 #=================================================
 shopt -s extglob
 
-function git_clone_path() {
-  trap 'rm -rf "$tmpdir"' EXIT
-  branch="$1" rurl="$2" mv="$3"
-  [[ "$mv" != "mv" ]] && shift 2 || shift 3
-  rootdir="$PWD"
-  tmpdir="$(mktemp -d)" || exit 1
-  if [ ${#branch} -lt 10 ]; then
-    git clone -b "$branch" --depth 1 --filter=blob:none --sparse "$rurl" "$tmpdir"
-    cd "$tmpdir"
-  else
-    git clone --filter=blob:none --sparse "$rurl" "$tmpdir"
-    cd "$tmpdir"
-    git checkout $branch
-  fi
-  if [ "$?" != 0 ]; then
-    echo "error on $rurl"
-    exit 1
-  fi
-  git sparse-checkout init --cone
-  git sparse-checkout set $@
-  [[ "$mv" != "mv" ]] && cp -rn ./* $rootdir/ || mv -n $@/* $rootdir/$@/
-  cd $rootdir
-}
-
-
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/kwrt-packages.git;main' feeds.conf.default
 sed -i "/telephony/d" feeds.conf.default
 
@@ -115,7 +90,9 @@ sed -i \
 	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
 	package/feeds/kiddin9/*/Makefile
 
-sed -i "s/OpenWrt/xyWrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in include/u-boot.mk include/version.mk || true
+sed -i "s/OpenWrt/xyWrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in || true
+sed -i "s/OpenWrt/Kwrt/g" package/base-files/image-config.in include/u-boot.mk include/version.mk || true
+# sed -i "s/OpenWrt/Kwrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in include/u-boot.mk include/version.mk || true
 
 sed -i -e "s/set \${s}.country='\${country || ''}'/set \${s}.country='\${country || \"CN\"}'/g" -e "s/set \${s}.disabled=.*/set \${s}.disabled='0'/" package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc
 
