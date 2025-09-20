@@ -46,7 +46,7 @@ chmod +x ../diy.sh
 
 cp -f ../.config .config
 
-if [ -f ../${{TARGET}}/.config ]; then
+if [ -f ../${TARGET}/.config ]; then
     echo >> .config
     cat ../${TARGET}/.config >> .config
 fi
