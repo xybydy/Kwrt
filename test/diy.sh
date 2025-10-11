@@ -35,7 +35,7 @@ rm -rf package/libs/openssl package/network/services/ppp
 git_clone_path master https://github.com/immortalwrt/immortalwrt package/libs/openssl package/network/services/ppp
 
 rm -rf feeds/kiddin9/my-default-settings
-git_clone_path main https://github.com/xybydy/kwrt-packages my-default-settings
+git_clone_path main https://github.com/xybydy/my-packages my-default-settings
 mv -f my-default-settings feeds/kiddin9/
 
 
@@ -90,7 +90,7 @@ sed -i \
 	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
 	package/feeds/kiddin9/*/Makefile
 
-sed -i "s/OpenWrt/xyWrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in || true
+sed -i "s/OpenWrt/xyWrt/g" package/base-files/files/bin/config_generate package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in || true
 sed -i "s/OpenWrt/Kwrt/g" package/base-files/image-config.in include/u-boot.mk include/version.mk || true
 # sed -i "s/OpenWrt/Kwrt/g" package/base-files/files/bin/config_generate package/base-files/image-config.in package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc config/Config-images.in Config.in include/u-boot.mk include/version.mk || true
 
