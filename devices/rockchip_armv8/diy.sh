@@ -11,7 +11,7 @@ git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip
 
 wget -N https://github.com/istoreos/istoreos/raw/refs/heads/istoreos-23.05/target/linux/rockchip/patches-5.15/305-r2s-pwm-fan.patch -P target/linux/rockchip/patches-6.6/
 
-wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.12222 -P include/
+wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.12 -P include/
 
 wget -N https://github.com/coolsnowwolf/lede/raw/refs/heads/master/include/trusted-firmware-a.mk -P include/
 
