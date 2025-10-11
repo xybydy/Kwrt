@@ -5,13 +5,13 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 #bash $SHELL_FOLDER/../common/kernel_6.6.sh
 
-rm -rf package/boot target/linux/rockchip target/linux/generic
+#rm -rf package/boot target/linux/rockchip target/linux/generic
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip target/linux/generic package/boot
+#git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip target/linux/generic package/boot
 
 wget -N https://github.com/istoreos/istoreos/raw/refs/heads/istoreos-23.05/target/linux/rockchip/patches-5.15/305-r2s-pwm-fan.patch -P target/linux/rockchip/patches-6.6/
 
-wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.12 -P include/
+wget -N https://github.com/coolsnowwolf/lede/raw/master/include/kernel-6.6 -P include/
 
 wget -N https://github.com/coolsnowwolf/lede/raw/refs/heads/master/include/trusted-firmware-a.mk -P include/
 
@@ -39,4 +39,4 @@ sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
 
 echo '
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-6.12
+' >> ./target/linux/rockchip/armv8/config-6.6
