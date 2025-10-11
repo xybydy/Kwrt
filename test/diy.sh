@@ -2,6 +2,33 @@
 #=================================================
 shopt -s extglob
 
+
+function git_clone_path() {
+  trap 'rm -rf "$tmpdir"' EXIT
+  branch="$1" rurl="$2" mv="$3"
+  [[ "$mv" != "mv" ]] && shift 2 || shift 3
+  rootdir="$PWD"
+  tmpdir="$(mktemp -d)" || exit 1
+  if [ ${#branch} -lt 10 ]; then
+    git clone -b "$branch" --depth 1 --filter=blob:none --sparse "$rurl" "$tmpdir"
+    cd "$tmpdir"
+  else
+    git clone --filter=blob:none --sparse "$rurl" "$tmpdir"
+    cd "$tmpdir"
+    git checkout $branch
+  fi
+  if [ "$?" != 0 ]; then
+    echo "error on $rurl"
+    exit 1
+  fi
+  git sparse-checkout init --cone
+  git sparse-checkout set $@
+  [[ "$mv" != "mv" ]] && cp -rn ./* $rootdir/ || mv -n $@/* $rootdir/$@/
+  cd $rootdir
+}
+
+
+
 sed -i '$a src-git kiddin9 https://github.com/kiddin9/kwrt-packages.git;main' feeds.conf.default
 sed -i "/telephony/d" feeds.conf.default
 
