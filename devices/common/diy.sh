@@ -36,6 +36,10 @@ rm -rf package/libs/openssl package/network/services/ppp feeds/luci/modules/luci
 git_clone_path openwrt-24.10 https://github.com/immortalwrt/immortalwrt package/libs/openssl package/network/services/ppp
 git_clone_path separate-dhcp-dns https://github.com/Alphix/luci modules/luci-mod-network && mv modules/luci-mod-network feeds/luci/modules/
 
+rm -rf feeds/kiddin9/my-default-settings
+git_clone_path master https://github.com/xybydy/my-packages my-default-settings
+mv -f my-default-settings feeds/kiddin9/
+
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 # sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advancedplus luci-app-firewall luci-app-package-manager luci-app-upnp luci-app-syscontrol luci-proto-wireguard \
