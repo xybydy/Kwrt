@@ -344,7 +344,7 @@ jobs:
         uses: actions/upload-artifact@main
         if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
         with:
-          name: ${{ env.VERSION }}_${{github.event.inputs.param}}
+          name: ${{ env.VERSION }}_${{matrix.target}}
           path: |
             openwrt/bin/targets/
 
